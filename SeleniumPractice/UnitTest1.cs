@@ -7,6 +7,8 @@ namespace SeleniumPractice
 {
     public class Tests
     {
+
+    // Daniel Navarro
     /*******************************************************************************
      *  Variables and Helper Methods                                              /
      ****************************************************************************/
