@@ -3,12 +3,14 @@ using OpenQA.Selenium.Chrome;
 using System.Data.SqlTypes;
 using System.Threading;
 
+
 namespace SeleniumPractice
 {
     public class Tests
     {
 
-    // Daniel Navarro
+    // All Tests Created By Daniel Navarro
+
     /*******************************************************************************
      *  Variables and Helper Methods                                              /
      ****************************************************************************/
@@ -87,6 +89,61 @@ namespace SeleniumPractice
             return cookieCount;
         }
 
+        public int GetUpgradeCost(IWebDriver driver, string upgradeID)
+        {
+            IWebElement upgrade = driver.FindElement(By.Id(upgradeID));
+            int upgradeCost = ConvertTextToInt(upgrade.Text);
+            return upgradeCost;
+        }
+
+        public void ClickUpgrade(IWebDriver driver, string upgradeId) 
+        {
+            IWebElement upgrade = driver.FindElement(By.Id(upgradeId));
+            upgrade.Click();
+        }
+
+        public void GetMoneyBuyUpgrade(IWebDriver driver, string upgradeID, int numTimes=0)
+        {
+            if (numTimes == 0)  //Need to find upgrade cost
+            {
+                numTimes = GetUpgradeCost(driver, upgradeID);
+            }
+            ClickBigCookie(driver, numTimes);
+            ClickUpgrade(driver, upgradeID);
+        }
+
+        public int[] GetBeforeAfterCosts(IWebDriver driver, string upgradeId)
+        {
+            int oldUpgradeCost = GetUpgradeCost(driver, upgradeId);  //Finds the cost
+            GetMoneyBuyUpgrade(driver, upgradeId, oldUpgradeCost);
+            Thread.Sleep(3000);
+            int newUpgradeCost = GetUpgradeCost(driver, upgradeId);  //Gets new cost
+            return [oldUpgradeCost, newUpgradeCost];
+        }
+
+        public int[] GetBeforeAfterMoney(IWebDriver driver, string upgradeId)
+        {
+            IWebElement upgrade = driver.FindElement(By.Id(upgradeId));
+            int upgradeCost = ConvertTextToInt(upgrade.Text);
+            ClickBigCookie(driver, upgradeCost);  // Gets enough money to buy Cursor
+            Thread.Sleep(1000);
+            int prePurchaseMoney = GetCookieCount(driver);  //Gets money total before purchase
+            ClickUpgrade(driver, upgradeId); // Buys upgrade
+            Thread.Sleep(1000);
+            int postPurchaseMoney = GetCookieCount(driver);  //Gets money total after purchase
+            return [prePurchaseMoney, postPurchaseMoney];
+        }
+
+        public string GetAmountPurchased(IWebDriver driver, string upgradeId)
+        {
+            IWebElement upgrade = driver.FindElement(By.Id(upgradeId));
+            int upgradeCost = ConvertTextToInt(upgrade.Text);
+            GetMoneyBuyUpgrade(driver, upgradeId, upgradeCost);
+            Thread.Sleep(3000);
+            IWebElement amountPurchased = driver.FindElement(By.XPath("//*[@id=\"" + upgradeId + "\"]/div"));
+            return amountPurchased.Text;
+        }
+
     /*******************************************************************************
      *  Initialization Tests                                                      /
      ****************************************************************************/
@@ -96,10 +153,12 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            ClickBigCookie(driver, 1);
+            Random random = new Random();
+            int randInt = random.Next(1, 11);
+            ClickBigCookie(driver, randInt);
             Thread.Sleep(3000);
             int cookiesCount = GetCookieCount(driver);
-            Assert.AreEqual(1, cookiesCount);
+            Assert.AreEqual(randInt, cookiesCount);
             driver.Close();
         }
 
@@ -112,8 +171,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement cursor = driver.FindElement(By.Id(cursorId));
-            int cursorCost = ConvertTextToInt(cursor.Text);
+            int cursorCost = GetUpgradeCost(driver, cursorId);
             Assert.AreEqual(initCursorCost, cursorCost);
             driver.Close();
         }
@@ -123,8 +181,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement grandma = driver.FindElement(By.Id(grandmaId));
-            int grandmaCost = ConvertTextToInt(grandma.Text);
+            int grandmaCost = GetUpgradeCost(driver, grandmaId);
             Assert.AreEqual(initGrandmaCost, grandmaCost);
             driver.Close();
         }
@@ -134,8 +191,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement factory = driver.FindElement(By.Id(factoryId));
-            int factoryCost = ConvertTextToInt(factory.Text);
+            int factoryCost = GetUpgradeCost(driver, factoryId);
             Assert.AreEqual(initFactoryCost, factoryCost);
             driver.Close();
         }
@@ -145,8 +201,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement mine = driver.FindElement(By.Id(mineId));
-            int mineCost = ConvertTextToInt(mine.Text);
+            int mineCost = GetUpgradeCost(driver, mineId);
             Assert.AreEqual(initMineCost, mineCost);
             driver.Close();
         }
@@ -155,9 +210,8 @@ namespace SeleniumPractice
         public void ShipmentPrice()
         {
             IWebDriver driver = new ChromeDriver();
-            SetUpPage(driver);            
-            IWebElement shipment = driver.FindElement(By.Id(shipmentId));
-            int shipmentCost = ConvertTextToInt(shipment.Text);
+            SetUpPage(driver);
+            int shipmentCost = GetUpgradeCost(driver, shipmentId);
             Assert.AreEqual(initShipmentCost, shipmentCost);
             driver.Close();
         }
@@ -167,8 +221,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement alchemyLab = driver.FindElement(By.Id(alchemyLabId));
-            int alchemyLabCost = ConvertTextToInt(alchemyLab.Text);
+            int alchemyLabCost = GetUpgradeCost(driver, alchemyLabId);
             Assert.AreEqual(initAlchemyLabCost, alchemyLabCost);
             driver.Close();
         }
@@ -178,8 +231,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement portal = driver.FindElement(By.Id(portalId));
-            int portalCost = ConvertTextToInt(portal.Text);
+            int portalCost = GetUpgradeCost(driver, portalId);
             Assert.AreEqual(initPortalCost, portalCost);
             driver.Close();
         }
@@ -189,8 +241,7 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement timeMachine = driver.FindElement(By.Id(timeMachineId));
-            int timeMachineCost = ConvertTextToInt(timeMachine.Text);
+            int timeMachineCost = GetUpgradeCost(driver, timeMachineId);
             Assert.AreEqual(initTimeMachineCost, timeMachineCost);
             driver.Close();
         }
@@ -204,51 +255,246 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement cursor = driver.FindElement(By.Id(cursorId));
-            int oldCursorCost = ConvertTextToInt(cursor.Text);
-            ClickBigCookie(driver, oldCursorCost);
-            cursor.Click();
-            Thread.Sleep(3000);
-            IWebElement cursorStateChanged = driver.FindElement(By.Id(cursorId));
-            int newCursorCost = ConvertTextToInt(cursorStateChanged.Text);
-            Assert.AreNotEqual(oldCursorCost, newCursorCost);
+            int[] costs = GetBeforeAfterCosts(driver, cursorId);
+            Assert.AreNotEqual(costs[0], costs[1]);  //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void GrandmaCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, grandmaId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void FactoryCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, factoryId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void MineCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, mineId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void ShipmentCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, shipmentId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void AlchemyLabCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, alchemyLabId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void PortalCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, portalId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
+            driver.Close();
+        }
+
+        [Test]
+        public void TimeMachineCostUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] costs = GetBeforeAfterCosts(driver, timeMachineId);
+            Assert.AreNotEqual(costs[0], costs[1]); //[0] = prepurchase, [1] = postpurchase
             driver.Close();
         }
 
     /*******************************************************************************
      *  Money Subtraction Tests                                                   /
      ****************************************************************************/
+
         [Test]
         public void CursorPriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement cursor = driver.FindElement(By.Id(cursorId));
-            int cursorCost = ConvertTextToInt(cursor.Text);
-            ClickBigCookie(driver, cursorCost); // Gets enough money to buy Cursor
-            int prePurchaseMoney = GetCookieCount(driver);
-            cursor.Click(); // Buys the Cursor
-            int postPurchaseMoney = GetCookieCount(driver);
-            Thread.Sleep(3000);
-            Assert.True(prePurchaseMoney != postPurchaseMoney);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, cursorId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void GrandmaPriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, grandmaId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void FactoryPriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, factoryId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void MinePriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, mineId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void ShipmentPriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, shipmentId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void AlchemyLabPriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, alchemyLabId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void PortalPriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, portalId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
+            driver.Close();
+        }
+
+        [Test]
+        public void TimeMachinePriceSubtracted()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            int[] cookieCounts = GetBeforeAfterMoney(driver, timeMachineId);
+            Assert.True(cookieCounts[0] != cookieCounts[1]);
             driver.Close();
         }
 
     /*******************************************************************************
      *  Upgrade Amount Purchased Tests                                            /
      ****************************************************************************/
+
         [Test]
         public void CursorAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
-            SetUpPage(driver); 
-            IWebElement cursor = driver.FindElement(By.Id(cursorId));
-            int cursorCost = ConvertTextToInt(cursor.Text);
-            ClickBigCookie(driver, cursorCost);
-            cursor.Click();
-            Thread.Sleep(3000);
-            IWebElement amountPurchased = driver.FindElement(By.XPath("//*[@id=\"" + cursorId + "\"]/div"));
-            Assert.AreEqual("1", amountPurchased.Text);
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, cursorId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void GrandmaAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, grandmaId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void FactoryAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, factoryId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void MineAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, mineId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void ShipmentAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, shipmentId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void AlchemyLabAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, alchemyLabId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void PortalAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, portalId);
+            Assert.AreEqual("1", amountPurchased);
+            driver.Close();
+        }
+
+        [Test]
+        public void TimeMachineAmountUpdates()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            string amountPurchased = GetAmountPurchased(driver, timeMachineId);
+            Assert.AreEqual("1", amountPurchased);
             driver.Close();
         }
 
@@ -260,13 +506,94 @@ namespace SeleniumPractice
         {
             IWebDriver driver = new ChromeDriver();
             SetUpPage(driver);
-            IWebElement cursor = driver.FindElement(By.Id(cursorId));
-            int cursorCost = ConvertTextToInt(cursor.Text);
-            ClickBigCookie(driver, cursorCost);
-            cursor.Click();
+            GetMoneyBuyUpgrade(driver, cursorId);
             Thread.Sleep(3000);
-            IWebElement cursorIcon = driver.FindElement(By.ClassName("cursor"));
-            Assert.IsNotNull(cursorIcon);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("cursor"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void GrandmaIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, grandmaId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("grandma"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void FactoryIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, factoryId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("factory"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void MineIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, mineId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("mine"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void ShipmentIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, shipmentId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("shipment"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void AlchemyLabIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, alchemyLabId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("lab"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void PortalIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, alchemyLabId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("portal"));
+            Assert.IsNotNull(upgradeIcon);
+            driver.Close();
+        }
+
+        [Test]
+        public void TimeMachineLabIconAppears()
+        {
+            IWebDriver driver = new ChromeDriver();
+            SetUpPage(driver);
+            GetMoneyBuyUpgrade(driver, timeMachineId);
+            Thread.Sleep(3000);
+            IWebElement upgradeIcon = driver.FindElement(By.ClassName("time"));
+            Assert.IsNotNull(upgradeIcon);
             driver.Close();
         }
     }
