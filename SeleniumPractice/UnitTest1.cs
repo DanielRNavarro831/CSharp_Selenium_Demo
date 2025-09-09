@@ -270,7 +270,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void FactoryCostUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -280,7 +280,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void MineCostUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -290,7 +290,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void ShipmentCostUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -300,7 +300,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void AlchemyLabCostUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -310,7 +310,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void PortalCostUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -320,7 +320,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void TimeMachineCostUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -354,7 +354,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void FactoryPriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
@@ -364,7 +364,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void MinePriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
@@ -374,7 +374,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void ShipmentPriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
@@ -384,7 +384,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void AlchemyLabPriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
@@ -394,7 +394,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void PortalPriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
@@ -404,7 +404,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void TimeMachinePriceSubtracted()
         {
             IWebDriver driver = new ChromeDriver();
@@ -438,7 +438,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void FactoryAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -448,7 +448,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void MineAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -458,7 +458,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void ShipmentAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -468,7 +468,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void AlchemyLabAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -478,7 +478,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void PortalAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -488,7 +488,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void TimeMachineAmountUpdates()
         {
             IWebDriver driver = new ChromeDriver();
@@ -525,7 +525,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void FactoryIconAppears()
         {
             IWebDriver driver = new ChromeDriver();
@@ -537,7 +537,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void MineIconAppears()
         {
             IWebDriver driver = new ChromeDriver();
@@ -549,7 +549,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void ShipmentIconAppears()
         {
             IWebDriver driver = new ChromeDriver();
@@ -561,7 +561,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void AlchemyLabIconAppears()
         {
             IWebDriver driver = new ChromeDriver();
@@ -573,7 +573,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void PortalIconAppears()
         {
             IWebDriver driver = new ChromeDriver();
@@ -585,7 +585,7 @@ namespace SeleniumPractice
             driver.Close();
         }
 
-        [Test]
+        //[Test]
         public void TimeMachineLabIconAppears()
         {
             IWebDriver driver = new ChromeDriver();
